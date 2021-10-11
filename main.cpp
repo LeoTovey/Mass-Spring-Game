@@ -30,11 +30,6 @@ static void glfw_error_callback(int error, const char* description)
 const int windowWidth = 1280;
 const int windowHeight = 720;
 
-void drawParticle(const Vector2f& v)
-{
-    ImDrawList* draw_list = ImGui::GetCurrentWindow()->DrawList;
-    draw_list->AddCircleFilled(ImVec2(v.x, v.y),190, ImGui::GetColorU32(ImVec4(100.0f, 0.0f, 0.0f, 255.0f)));
-}
 int main(int, char**)
 {
     // Setup window
@@ -87,9 +82,7 @@ int main(int, char**)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    // Our state
-    bool show_demo_window = true;
-    bool show_another_window = false;
+
     ImVec4 clear_color = ImVec4(56.0f/256.0f, 84.0f/256.0f, 102.0f/256.0f, 1.00f);
 
     MassSpringSystem mass_spring_system;
@@ -149,8 +142,8 @@ int main(int, char**)
         ImGui::End();
         ImGui::PopStyleVar(2);
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
+//        if (show_demo_window)
+//            ImGui::ShowDemoWindow(&show_demo_window);
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
         {
@@ -158,8 +151,10 @@ int main(int, char**)
             static int counter = 0;
 
             ImGui::Begin("Simple Mass-Spring System");                          // Create a window called "Hello, world!" and append into it.
+            ImGui::SetWindowFontScale(2.0f);
             ImGui::Text("Right-click to add particle");
-            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+            ImGui::Text("Right-click with shift to fix");
+            ImGui::Text("Right-click with ctrl to attract");
             ImGui::SliderFloat("springY", &mass_spring_system.m_springY, 0.0f, 10000.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::SliderFloat("dashPotDamping", &mass_spring_system.m_dashPotDamping, 0.0f, 10000.0f);
             ImGui::SliderFloat("dragDamping",&mass_spring_system.m_dragDamping, 0.0f, 1000.0f);
@@ -171,17 +166,6 @@ int main(int, char**)
             ImGui::End();
         }
 
-
-
-        // 3. Show another simple window.
-        if (show_another_window)
-        {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
-            ImGui::End();
-        }
 
         // Rendering
         ImGui::Render();
